@@ -58,8 +58,7 @@ function isString(value) {
  *   concatenateStrings('', 'bb') => 'bb'
  */
 function concatenateStrings(value1, value2) {
-  // Handle cases where one or both inputs are not strings.
-  return (value1 || '') + (value2 || '');
+  return value1.concat(value2);
 }
 
 /**
@@ -126,10 +125,7 @@ function removeLeadingWhitespaces(value) {
  *   removeTrailingWhitespaces('\t\t\tHello, World! ') => '\t\t\tHello, World!'
  */
 function removeTrailingWhitespaces(value) {
-  if (typeof value !== 'string') {
-    return value;
-  }
-  return value.replace(/\s+$/, '');
+  return value.trimEnd();
 }
 
 /**
@@ -462,10 +458,7 @@ function extractNameFromTemplate(value) {
  *   unbracketTag('<a>') => 'a'
  */
 function unbracketTag(str) {
-  if (str.startsWith('<') && str.endsWith('>')) {
-    return str.substring(1, str.length - 1);
-  }
-  return str;
+  return str.replace('<', '').replace('>', '');
 }
 
 /**
@@ -484,13 +477,7 @@ function unbracketTag(str) {
  *   'info@gmail.com' => ['info@gmail.com']
  */
 function extractEmails(str) {
-  if (typeof str !== 'string') {
-    throw new Error('Input must be a string.');
-  }
-  return str
-    .split(';')
-    .map((email) => email.trim())
-    .filter((email) => email.length > 0);
+  return str.split(';');
 }
 
 /**
@@ -510,17 +497,11 @@ function extractEmails(str) {
  *
  */
 function encodeToRot13(str) {
-  let result = '';
-  for (let i = 0; i < str.length; i += 1) {
-    let charCode = str.charCodeAt(i);
-    if (charCode >= 65 && charCode <= 90) {
-      charCode = ((charCode - 65 + 13) % 26) + 65;
-    } else if (charCode >= 97 && charCode <= 122) {
-      charCode = ((charCode - 97 + 13) % 26) + 97;
-    }
-    result += String.fromCharCode(charCode);
-  }
-  return result;
+  return str.replace(/[a-zA-Z]/g, (char) =>
+    String.fromCharCode(
+      char.charCodeAt() + (char.toLowerCase() < 'n' ? 13 : -13)
+    )
+  );
 }
 
 /**
